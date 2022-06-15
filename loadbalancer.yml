@@ -50,5 +50,6 @@
               kind: Service
               name: loadbalancer
             host: "{{ loadbalancer_svc.metadata.name }}-{{ loadbalancer_svc.metadata.namespace }}.octo-emerging.redhataicoe.com"
-            port:
+            ports:
+            - port:
               targetPort: 8080
