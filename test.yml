@@ -1,3 +1,7 @@
-    - name: Hello Message
-      debug:
+---
+- name: Playbook to configure LB self-service
+  host: localhost  
+  tasks:
+  - name: Hello Message
+      ansible.builtin.debug:
         msg: "Hello World!"
