@@ -1,10 +1,13 @@
 ---
-- host: localhost
+- name: Playbook to configure automation hub post installation
+  host: localhost
+  connection: local
   become: false
   gather_facts: false
   collections:
     - kubernetes.core
     - community.aws
+    
   tasks:
   - name: Identify the Kubernetes address for the load balancer svc
     kubernetes.core.k8s:
