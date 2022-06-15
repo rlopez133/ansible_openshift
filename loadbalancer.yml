@@ -1,5 +1,5 @@
 ---
-- name: Playbook to configure automation hub post installation
+- name: Playbook to configure LB self-service
   host: localhost
   connection: local
   become: false
