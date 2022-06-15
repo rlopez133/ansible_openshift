@@ -1,4 +1,15 @@
-- name: Create a Deployment by reading the definition from a local file
-  kubernetes.core.k8s:
-    state: present
-    src: /testing/deployment.yml
+---
+- name: Playbook to configure LB self-service
+  host: localhost
+  connection: local
+  become: false
+  gather_facts: false
+  collections:
+    - kubernetes.core
+    - community.aws
+    
+  tasks:
+    - name: Create a Deployment by reading the definition from a local file
+      kubernetes.core.k8s:
+        state: present
+        src: /testing/deployment.yml
