@@ -1,6 +1,6 @@
 ---
 - name: Playbook to configure LB self-service
-  host: localhost
+  hosts: localhost
   connection: local
   become: false
   gather_facts: false
