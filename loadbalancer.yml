@@ -1,0 +1,51 @@
+---
+- host: localhost
+  become: false
+  gather_facts: false
+  collections:
+    - kubernetes.core
+    - community.aws
+  tasks:
+  - name: Identify the Kubernetes address for the load balancer svc
+    kubernetes.core.k8s:
+      state: present
+      definition:
+        apiVersion: v1
+        kind: Service
+        metadata:
+          name: loadbalancer
+          namespace: testing
+        spec:
+          type: LoadBalancer
+          ports:
+          - port: 8080
+            targetPort: 8080
+          selector:
+            name: loadbalancer
+    register: loadbalancer_svc
+    
+  - name: Create route53 entry for the load balancer
+    communtiy.aws.route53:
+      state: present
+      zone: "octo-emerging.redhataicoe.com"
+      record: "{{ loadbalancer_svc.metadata.name }}-{{ loadbalancer_svc.metadata.namespace }}"
+      type: A
+      ttl: 60
+      value: "{{ loadbalancer_svc.status.loadBalancer.ingress[0].ip }}"
+    
+  - name: Identify the route
+    kubernetes.core.k8s:
+      state: present
+      definition:
+        apiVersion: v1
+        kind: Route
+        metadata:
+          name: loadbalancer
+          namespace: testing
+        spec:
+          to:
+            kind: Service
+            name: loadbalancer
+          host: "{{ loadbalancer_svc.metadata.name }}-{{ loadbalancer_svc.metadata.namespace }}.octo-emerging.redhataicoe.com"
+          port:
+            targetPort: 8080
